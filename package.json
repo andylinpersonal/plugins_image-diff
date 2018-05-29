@@ -1,0 +1,12 @@
+{
+  "license": "Apache-2.0",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "resemblejs": "^2.10.3",
+    "webcomponents.js": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "devDependencies": {
+    "iron-test-helpers": "PolymerElements/iron-test-helpers#^2.0.0",
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0"
+  }
+}
