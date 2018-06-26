@@ -1,6 +1,4 @@
-<!DOCTYPE html>
 <!--
-@license
 Copyright (C) 2018 The Android Open Source Project
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,17 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-<title>Test Runner</title>
-<meta charset="utf-8">
-<script src="../node_modules/webcomponents.js/webcomponents-lite.min.js"></script>
-<script src="../node_modules/web-component-tester/browser.js"></script>
-
-<script>
-  const suites = [
-    '../gr-resemble-diff-mode/gr-resemble-diff-mode_test.html',
-  ];
-
-  WCT.loadSuites(suites);
-  WCT.loadSuites(suites.map(suite => `${suite}?dom=shadow`));
-</script>
+<script src="../node_modules/resemblejs/resemble.js"></script>
+<dom-module id="gr-resemble-diff-mode">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      #imageDiff {
+        border: 1px solid var(--border-color, #ddd);
+        display: block;
+        margin: 0 auto;
+      }
+    </style>
+    <img id="imageDiff">
+  </template>
+  <script src="gr-resemble-diff-mode.js"></script>
+</dom-module>
