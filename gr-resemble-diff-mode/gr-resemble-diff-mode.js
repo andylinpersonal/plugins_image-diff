@@ -19,7 +19,7 @@
 
     properties: {
       baseImage: Object,
-      revisonImage: Object,
+      revisionImage: Object,
     },
 
     observers: [
