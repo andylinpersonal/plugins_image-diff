@@ -14,10 +14,33 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+<link rel="import" href="../gr-opacity-diff-mode/gr-opacity-diff-mode.html">
+<link rel="import" href="../gr-resemble-diff-mode/gr-resemble-diff-mode.html">
+
 <dom-module id="gr-image-diff-tool">
   <template>
     <style>
+      :host {
+        display: block;
+      }
     </style>
+
+    <template is="dom-if" if="[[_showResembleMode]]" restamp="true">
+      <gr-resemble-diff-mode
+          base-image="[[baseImage]]"
+          revision-image="[[revisionImage]]"></gr-resemble-diff-mode>
+    </template>
+
+    <template is="dom-if" if="[[_showOpacityMode]]" restamp="true">
+      <gr-opacity-diff-mode
+          base-image="[[baseImage]]"
+          revision-image="[[revisionImage]]"></gr-opacity-diff-mode>
+    </template>
+
+    <select id="dropdown" on-change="handleSelect">
+      <option value="resemble">Resemble Mode</option>
+      <option value="opacity">Opacity Mode</option>
+    </select>
   </template>
   <script src="gr-image-diff-tool.js"></script>
 </dom-module>

@@ -1,0 +1,68 @@
+<!--
+Copyright (C) 2018 The Android Open Source Project
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+<title>image-diff-tool</title>
+
+<link rel="import" href="../node_modules/polymer/polymer.html">
+<link rel="import" href="../node_modules/@polymer/test-fixture/test-fixture.html">
+<link rel="import" href="../node_modules/iron-test-helpers/iron-test-helpers.html">
+<link rel="import" href="./gr-image-diff-tool.html">
+
+<script>void(0);</script>
+
+<script src="../node_modules/webcomponents.js/webcomponents-lite.min.js"></script>
+<script src="../node_modules/web-component-tester/browser.js"></script>
+<script src="../node_modules/@polymer/sinonjs/sinon.js"></script>
+
+<test-fixture id="basicFixture">
+  <template>
+    <gr-image-diff-tool>
+    </gr-image-diff-tool>
+  </template>
+</test-fixture>
+
+<script>
+  suite('gr-image-diff-tool tests', () => {
+    let element;
+
+    setup(() => {
+      element = fixture('basicFixture');
+    });
+
+    test('test opacity mode', () => {
+      element.$.dropdown.value = 'opacity';
+      element.handleSelect();
+      assert.isTrue(element._showOpacityMode);
+      assert.isFalse(element._showResembleMode);
+      flushAsynchronousOperations();
+
+      assert.ok(element.$$('gr-opacity-diff-mode'));
+      assert.equal(element.$$('gr-resemble-diff-mode'), null);
+    });
+
+    test('test resemble mode', () => {
+      element.$.dropdown.value = 'resemble';
+      element.handleSelect();
+      assert.isTrue(element._showResembleMode);
+      assert.isFalse(element._showOpacityMode);
+      flushAsynchronousOperations();
+
+      assert.ok(element.$$('gr-resemble-diff-mode'));
+      assert.equal(element.$$('gr-opacity-diff-mode'), null);
+    });
+  });
+</script>

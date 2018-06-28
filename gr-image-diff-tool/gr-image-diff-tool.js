@@ -16,8 +16,27 @@
 
   Polymer({
     is: 'gr-image-diff-tool',
+
     properties: {
-      hi: String,
+      _showResembleMode: {
+        type: Boolean,
+        value: true,
+      },
+      _showOpacityMode: {
+        type: Boolean,
+        value: false,
+      },
+    },
+
+    handleSelect() {
+      const mode = this.$.dropdown.value;
+      if (mode === 'resemble') {
+        this._showResembleMode = true;
+        this._showOpacityMode = false;
+      } else if (mode === 'opacity') {
+        this._showOpacityMode = true;
+        this._showResembleMode = false;
+      }
     },
   });
 })();
