@@ -21,13 +21,37 @@ limitations under the License.
       :host {
         display: block;
       }
+      h2 {
+        display: none;
+      }
       #imageDiff {
         border: 1px solid var(--border-color, #ddd);
-        display: block;
-        margin: 0 auto;
+      }
+      :host([loading]) #imageDiff {
+        display: none;
+      }
+      :host([loading]) h2 {
+        display: inline;
+        padding: 1em 0;
+      }
+      .diffContainer {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
       }
     </style>
-    <img id="imageDiff">
+    <div class="diffContainer">
+      <h2>Loading...</h2>
+      <img id="imageDiff">
+    </div>
+    <label>
+      <input
+          id="ignoreColorsToggle"
+          type="checkbox"
+          checked$="[[_ignoreColors]]"
+          on-tap="_handleIgnoreColorsToggle">
+      Ignore colors
+    </label>
   </template>
   <script src="gr-resemble-diff-mode.js"></script>
 </dom-module>

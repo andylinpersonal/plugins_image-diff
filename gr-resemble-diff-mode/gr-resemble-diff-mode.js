@@ -20,36 +20,83 @@
     properties: {
       baseImage: Object,
       revisionImage: Object,
+      _ignoreColors: {
+        type: Boolean,
+        value: false,
+      },
+      loading: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true,
+      },
     },
 
     observers: [
       '_handleImageDiff(baseImage, revisionImage)',
     ],
 
-    _handleImageDiff(base, revision) {
-      if (base && revision) {
-        const baseEncoded = this.getDataUrl(base);
-        const revisionEncoded = this.getDataUrl(revision);
-        return this.compareImages(baseEncoded, revisionEncoded).then(src => {
-          this.$.imageDiff.setAttribute('src', src);
+    attached() {
+      resemble.outputSettings({
+        errorType: 'movement',
+        largeImageThreshold: 450,
+      });
+    },
+
+    _handleImageDiff() {
+      this.reload();
+    },
+
+    _setImageDiffSrc(src) {
+      delete this.$.imageDiff.src;
+      this.$.imageDiff.src = src;
+    },
+
+    _getDataUrl(image) {
+      return 'data:' + image['type'] + ';base64,' + image['body'];
+    },
+
+    _maybeIgnoreColors(diffProcess, ignoreColors) {
+      if (ignoreColors) {
+        diffProcess.ignoreColors();
+      } else {
+        diffProcess.ignoreNothing();
+      }
+      return diffProcess;
+    },
+
+    _createDiffProcess(base, rev, ignoreColors) {
+      const process = resemble(base).compareTo(rev);
+      return this._maybeIgnoreColors(process, ignoreColors);
+    },
+
+    /**
+     * Reloads the diff. Resemble 1.2.1 seems to have an issue with successive
+     * reloads via the repaint() function, so this implementation creates a
+     * fresh diff each time it is called.
+     *
+     * @return {Promise} resolves if and when the reload succeeds.
+     */
+    reload() {
+      this.loading = true;
+      if (this.baseImage && this.revisionImage) {
+        const base = this._getDataUrl(this.baseImage);
+        const rev = this._getDataUrl(this.revisionImage);
+
+        return new Promise((resolve, reject) => {
+          this._createDiffProcess(base, rev, this._ignoreColors)
+              .onComplete(data => {
+                this._setImageDiffSrc(data.getImageDataUrl());
+                this.loading = false;
+                resolve();
+              });
         });
       }
+      this.loading = false;
     },
 
-    compareImages(baseEncoded, revisionEncoded) {
-      return new Promise((resolve, reject) =>
-          resemble(baseEncoded).compareTo(revisionEncoded).onComplete(data => {
-            if (data.error) {
-              reject();
-            } else {
-              resolve(data.getImageDataUrl());
-            }
-          })
-      );
-    },
-
-    getDataUrl(image) {
-      return 'data:' + image['type'] + ';base64,' + image['body'];
+    _handleIgnoreColorsToggle() {
+      this._ignoreColors = !this._ignoreColors;
+      this.reload();
     },
   });
 })();

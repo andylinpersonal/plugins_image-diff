@@ -38,10 +38,14 @@ limitations under the License.
 <script>
   suite('gr-resemble-diff-mode tests', () => {
     let element;
+    let sandbox;
 
     setup(() => {
+      sandbox = sinon.sandbox.create();
       element = fixture('basicFixture');
     });
+
+    teardown(() => { sandbox.restore(); })
 
     test('test initialization', () => {
       assert.notEqual(element, null);
@@ -49,35 +53,45 @@ limitations under the License.
       assert.equal(element.revisionImage, null);
     });
 
-    test('test getDataUrl', () => {
-      element.baseImage = {
-        type: 'image/png',
-        body: 'SGVsbG8=',
-      };
-      const desiredOutput = 'data:image/png;base64,SGVsbG8=';
-      assert.equal(element.getDataUrl(element.baseImage), desiredOutput);
+    test('_setImageDiffSrc', () => {
+      const img = element.$.imageDiff;
+      const src = 'data:image/png;base64,SGVsbG8=';
+      assert.notOk(img.getAttribute('src'));
+      element._setImageDiffSrc(src);
+      assert.equal(img.getAttribute('src'), src);
     });
 
-    test('test resemble mode image diff', () => {
-      const img = element.$.imageDiff;
-      const expected_result = 'data:image/png;base64,SGVsbG8V29ybGQ==';
-      assert.isFalse(img.hasAttribute('src'));
-      element.baseImage = {
-        type: 'image/png',
-        body: 'SGVsbG8=',
+    test('_maybeIgnoreColors', () => {
+      const dummyProcess = {
+        ignoreColors: sandbox.stub(),
+        ignoreNothing: sandbox.stub(),
       };
-      assert.isFalse(img.hasAttribute('src'));
-      element.revisionImage = {
-        type: 'image/png',
-        body: 'V29ybGQ=',
-      };
+      element._maybeIgnoreColors(dummyProcess, false);
+      assert.isFalse(dummyProcess.ignoreColors.called);
+      assert.isTrue(dummyProcess.ignoreNothing.called);
+      element._maybeIgnoreColors(dummyProcess, true);
+      assert.isTrue(dummyProcess.ignoreColors.called);
+    });
+
+    test('_handleIgnoreColorsToggle', () => {
+      sandbox.stub(element, 'reload');
+      element._ignoreColors = false;
+      assert.isFalse(element.$.ignoreColorsToggle.checked);
+      MockInteractions.tap(element.$.ignoreColorsToggle);
       flushAsynchronousOperations();
-      sinon.stub(element, 'compareImages')
-          .returns(Promise.resolve(expected_result));
-      return element._handleImageDiff(element.baseImage, element.revisionImage)
-          .then(() => {
-            assert.equal(img.src, expected_result);
-          });
+
+      assert.isTrue(element._ignoreColors);
+      assert.isTrue(element.reload.called);
+    });
+
+    test('calls reload', () => {
+      sandbox.stub(element, 'reload');
+      element.baseImage = {};
+      assert.equal(element.reload.callCount, 0);
+      element.revisionImage = {};
+      assert.equal(element.reload.callCount, 1);
+      MockInteractions.tap(element.$.ignoreColorsToggle);
+      assert.equal(element.reload.callCount, 2);
     });
   });
 </script>
