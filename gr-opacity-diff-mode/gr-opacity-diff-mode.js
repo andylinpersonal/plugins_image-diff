@@ -41,5 +41,17 @@
     computeSrcString(image) {
       return 'data:' + image['type'] + ';base64, ' + image['body'];
     },
+
+    handleScaleSizesToggle() {
+      let width;
+      let height;
+      if (this.$.scaleSizesToggle.checked) {
+        width = Math.max(this.revisionImage._width, this.baseImage._width);
+        height = Math.max(this.revisionImage._height, this.baseImage._height);
+      }
+      this.customStyle['--img-width'] = width ? width + 'px' : null;
+      this.customStyle['--img-height'] = height ? height + 'px' : null;
+      this.updateStyles();
+    },
   });
 })();

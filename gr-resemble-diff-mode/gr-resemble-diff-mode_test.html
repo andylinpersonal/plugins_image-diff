@@ -45,7 +45,7 @@ limitations under the License.
       element = fixture('basicFixture');
     });
 
-    teardown(() => { sandbox.restore(); })
+    teardown(() => { sandbox.restore(); });
 
     test('test initialization', () => {
       assert.notEqual(element, null);

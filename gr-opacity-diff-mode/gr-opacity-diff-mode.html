@@ -24,7 +24,8 @@ limitations under the License.
         display: block;
         margin:auto;
         position: absolute;
-        width: 500px;
+        height: var(--img-height);
+        width: var(--img-width);
       }
       #imageRevision {
         opacity: var(--my-opacity-value);
@@ -39,6 +40,15 @@ limitations under the License.
     <div id="imageDiv">
       <img id="imageBase"/>
       <img id="imageRevision" data-opacity$="{{opacityValue}}"/>
+    </div>
+    <div>
+      <label>
+        <input
+            id="scaleSizesToggle"
+            type="checkbox"
+            on-tap="handleScaleSizesToggle">
+        Scale to same size
+      </label>
     </div>
     <label for="opacitySlider">Opacity</label>
     <input
