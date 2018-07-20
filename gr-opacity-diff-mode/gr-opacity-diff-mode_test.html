@@ -62,5 +62,61 @@ limitations under the License.
       assert.equal(element.computeSrcString(element.revisionImage),
           expectedOutcome);
     });
+
+    suite('size scaling', () => {
+      test('base image larger', () => {
+        element.baseImage = {
+          _width: 200,
+          _height: 300,
+        };
+        element.revisionImage = {
+          _width: 100,
+          _height: 90,
+        };
+        assert.equal(element.customStyle['--img-width'], undefined);
+        assert.equal(element.customStyle['--img-height'], undefined);
+        element.$.scaleSizesToggle.checked = true;
+        element.handleScaleSizesToggle();
+        flushAsynchronousOperations();
+        assert.equal(element.customStyle['--img-width'], '200px');
+        assert.equal(element.customStyle['--img-height'], '300px');
+      });
+
+      test('revisionImage larger', () => {
+        element.baseImage = {
+          _width: 200,
+          _height: 300,
+        };
+        element.revisionImage = {
+          _width: 400,
+          _height: 500,
+        };
+        assert.equal(element.customStyle['--img-width'], null);
+        assert.equal(element.customStyle['--img-height'], null);
+        element.$.scaleSizesToggle.checked = true;
+        element.handleScaleSizesToggle();
+        flushAsynchronousOperations();
+        assert.equal(element.customStyle['--img-width'], '400px');
+        assert.equal(element.customStyle['--img-height'], '500px');
+      });
+
+      test('bigger base width, smaller base height', () => {
+        element.baseImage = {
+          _width: 200,
+          _height: 300,
+        };
+        element.revisionImage = {
+          _width: 140,
+          _height: 400,
+        };
+        assert.equal(element.customStyle['--img-width'], null);
+        assert.equal(element.customStyle['--img-height'], null);
+        element.$.scaleSizesToggle.checked = true;
+        element.handleScaleSizesToggle();
+        flushAsynchronousOperations();
+        assert.equal(element.customStyle['--img-width'], '200px');
+        assert.equal(element.customStyle['--img-height'], '400px');
+      });
+    });
   });
 </script>
