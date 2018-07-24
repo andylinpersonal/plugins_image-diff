@@ -22,43 +22,43 @@ limitations under the License.
       }
       img {
         display: block;
-        margin:auto;
-        position: absolute;
         height: var(--img-height);
+        margin: auto;
+        position: absolute;
         width: var(--img-width);
       }
       #imageRevision {
         opacity: var(--my-opacity-value);
         z-index: 1;
       }
-      #imageDiv {
-        position: relative;
-        margin: auto;
-        width: 500px;
+      #imageDivContainer {
+        display: flex;
+        height: var(--div-height);
+        justify-content: space-around;
       }
     </style>
-    <div id="imageDiv">
+    <div id="imageDivContainer">
       <img id="imageBase"/>
-      <img id="imageRevision" data-opacity$="{{opacityValue}}"/>
+      <img data-opacity$="{{opacityValue}}" id="imageRevision"/>
     </div>
     <div>
       <label>
         <input
             id="scaleSizesToggle"
-            type="checkbox"
-            on-tap="handleScaleSizesToggle">
+            on-tap="handleScaleSizesToggle"
+            type="checkbox">
         Scale to same size
       </label>
     </div>
     <label for="opacitySlider">Opacity</label>
     <input
-      type="range"
       id="opacitySlider"
-      min="0.0"
       max="1.0"
-      value="1.0"
+      min="0.0"
+      on-input="handleOpacityChange"
       step=".01"
-      on-input="handleOpacityChange"/>
+      type="range"
+      value="1.0"/>
   </template>
  <script src="gr-opacity-diff-mode.js"></script>
 </dom-module>

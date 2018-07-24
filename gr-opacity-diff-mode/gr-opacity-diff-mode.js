@@ -26,10 +26,12 @@
       if (this.revisionImage) {
         const srcRevision = this.computeSrcString(this.revisionImage);
         this.$.imageRevision.setAttribute('src', srcRevision);
+        this.resizeDiffContainerHeight();
       }
       if (this.baseImage) {
         const srcBase = this.computeSrcString(this.baseImage);
         this.$.imageBase.setAttribute('src', srcBase);
+        this.resizeDiffContainerHeight();
       }
     },
 
@@ -45,12 +47,21 @@
     handleScaleSizesToggle() {
       let width;
       let height;
-      if (this.$.scaleSizesToggle.checked) {
+      if (this.$.scaleSizesToggle.checked &&
+          this.baseImage && this.revisionImage) {
         width = Math.max(this.revisionImage._width, this.baseImage._width);
         height = Math.max(this.revisionImage._height, this.baseImage._height);
       }
       this.customStyle['--img-width'] = width ? width + 'px' : null;
       this.customStyle['--img-height'] = height ? height + 'px' : null;
+      this.updateStyles();
+    },
+
+    resizeDiffContainerHeight() {
+      const maxHeight = Math.max(
+          this.baseImage ? this.baseImage._height : 0,
+          this.revisionImage ? this.revisionImage._height : 0);
+      this.customStyle['--div-height'] = maxHeight + 'px';
       this.updateStyles();
     },
   });

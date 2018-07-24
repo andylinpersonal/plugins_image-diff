@@ -118,5 +118,17 @@ limitations under the License.
         assert.equal(element.customStyle['--img-height'], '400px');
       });
     });
+    test('resize the div container for base & revision image comparison', () => {
+      element.baseImage = {
+        _height: 500,
+      };
+      element.revisionImage = {
+        _height: 300,
+      };
+      assert.equal(element.customStyle['--div-height'], undefined);
+      element.resizeDiffContainerHeight();
+      flushAsynchronousOperations();
+      assert.equal(element.customStyle['--div-height'], '500px');
+    });
   });
 </script>
