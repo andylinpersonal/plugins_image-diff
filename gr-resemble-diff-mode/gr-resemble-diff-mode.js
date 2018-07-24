@@ -36,7 +36,7 @@
     ],
 
     attached() {
-      resemble.outputSettings({
+      window.resemble.outputSettings({
         errorType: 'movement',
         largeImageThreshold: 450,
       });
@@ -65,7 +65,7 @@
     },
 
     _createDiffProcess(base, rev, ignoreColors) {
-      const process = resemble(base).compareTo(rev);
+      const process = window.resemble(base).compareTo(rev);
       return this._maybeIgnoreColors(process, ignoreColors);
     },
 
