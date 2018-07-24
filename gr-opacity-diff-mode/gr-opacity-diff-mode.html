@@ -20,6 +20,9 @@ limitations under the License.
       :host {
         display: block;
       }
+      .wrapper {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+      }
       img {
         display: block;
         height: var(--img-height);
@@ -31,34 +34,68 @@ limitations under the License.
         opacity: var(--my-opacity-value);
         z-index: 1;
       }
-      #imageDivContainer {
-        display: flex;
+      #imageDiffContainer {
         height: var(--div-height);
-        justify-content: space-around;
+        margin: auto;
+        width: var(--div-width);
+      }
+      #controlsContainer {
+        border-top: 1px solid var(--border-color, #ddd);
+        display: flex;
+      }
+      #controlsBox {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 1em;
+        min-width: 32em;
+        width: 100%;
+      }
+      label {
+        padding: 1em .5em;
+      }
+      input {
+        padding: 1em 0;
+      }
+      .cell {
+        align-items: center;
+        display: flex;
+      }
+      #opacitySlider {
+        width: 10em;
       }
     </style>
-    <div id="imageDivContainer">
-      <img id="imageBase"/>
-      <img data-opacity$="{{opacityValue}}" id="imageRevision"/>
+    <div class="wrapper">
+      <div id="imageDiffContainer">
+        <img id="imageBase"/>
+        <img data-opacity$="{{opacityValue}}" id="imageRevision"/>
+      </div>
+      <div id="controlsContainer">
+        <div id="controlsBox">
+          <div class="cell">
+            <input
+                id="scaleSizesToggle"
+                on-tap="handleScaleSizesToggle"
+                type="checkbox">
+            <label for="scaleSizesToggle">
+              Scale to same size
+            </label>
+          </div>
+          <div class="cell">
+            <label for="opacitySlider">
+              Revision image opacity
+            </label>
+            <input
+                id="opacitySlider"
+                max="1.0"
+                min="0.0"
+                on-input="handleOpacityChange"
+                step=".01"
+                type="range"
+                value="0.5"/>
+          </div>
+        </div>
+      </div>
     </div>
-    <div>
-      <label>
-        <input
-            id="scaleSizesToggle"
-            on-tap="handleScaleSizesToggle"
-            type="checkbox">
-        Scale to same size
-      </label>
-    </div>
-    <label for="opacitySlider">Opacity</label>
-    <input
-      id="opacitySlider"
-      max="1.0"
-      min="0.0"
-      on-input="handleOpacityChange"
-      step=".01"
-      type="range"
-      value="1.0"/>
   </template>
  <script src="gr-opacity-diff-mode.js"></script>
 </dom-module>

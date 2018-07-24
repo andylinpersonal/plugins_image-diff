@@ -26,13 +26,13 @@
       if (this.revisionImage) {
         const srcRevision = this.computeSrcString(this.revisionImage);
         this.$.imageRevision.setAttribute('src', srcRevision);
-        this.resizeDiffContainerHeight();
+        this.handleOpacityChange();
       }
       if (this.baseImage) {
         const srcBase = this.computeSrcString(this.baseImage);
         this.$.imageBase.setAttribute('src', srcBase);
-        this.resizeDiffContainerHeight();
       }
+      this.resizeDiffContainerHeight();
     },
 
     handleOpacityChange() {
@@ -62,6 +62,10 @@
           this.baseImage ? this.baseImage._height : 0,
           this.revisionImage ? this.revisionImage._height : 0);
       this.customStyle['--div-height'] = maxHeight + 'px';
+      const maxWidth = Math.max(
+          this.baseImage ? this.baseImage._width : 0,
+          this.revisionImage ? this.revisionImage._width : 0);
+      this.customStyle['--div-width'] = maxWidth + 'px';
       this.updateStyles();
     },
   });
