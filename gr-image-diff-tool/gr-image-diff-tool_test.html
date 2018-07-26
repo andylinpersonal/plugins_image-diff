@@ -38,14 +38,17 @@ limitations under the License.
 <script>
   suite('gr-image-diff-tool tests', () => {
     let element;
+    let sandbox;
 
     setup(() => {
       element = fixture('basicFixture');
+      sandbox = sinon.sandbox.create();
     });
 
+    teardown(() => { sandbox.restore(); });
+
     test('test opacity mode', () => {
-      element.$.dropdown.value = 'opacity';
-      element.handleSelect();
+      element._observeMode = 'opacity';
       assert.isTrue(element._showOpacityMode);
       assert.isFalse(element._showResembleMode);
       flushAsynchronousOperations();
@@ -55,14 +58,25 @@ limitations under the License.
     });
 
     test('test resemble mode', () => {
-      element.$.dropdown.value = 'resemble';
-      element.handleSelect();
+      element._observeMode = 'resemble';
       assert.isTrue(element._showResembleMode);
       assert.isFalse(element._showOpacityMode);
       flushAsynchronousOperations();
 
       assert.ok(element.$$('gr-resemble-diff-mode'));
       assert.equal(element.$$('gr-opacity-diff-mode'), null);
+    });
+
+    test('localStorage persists', () => {
+      sandbox.stub(element, '_setMode');
+      sandbox.stub(element, '_getMode');
+      element.attached();
+      assert.equal(element._getMode.callCount, 1);
+      assert.equal(element._setMode.callCount, 1);
+      element._observeMode = 'opacity';
+      assert.equal(element._setMode.callCount, 2);
+      element._observeMode = 'resemble';
+      assert.equal(element._setMode.callCount, 3);
     });
   });
 </script>

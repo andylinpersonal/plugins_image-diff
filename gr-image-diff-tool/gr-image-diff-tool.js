@@ -14,29 +14,54 @@
 (function() {
   'use strict';
 
+  const DiffModes = {
+    OPACITY: 'opacity',
+    RESEMBLE: 'resemble',
+  };
+
   Polymer({
     is: 'gr-image-diff-tool',
 
     properties: {
-      _showResembleMode: {
-        type: Boolean,
-        value: true,
-      },
-      _showOpacityMode: {
-        type: Boolean,
-        value: false,
+      _showResembleMode: Boolean,
+      _showOpacityMode: Boolean,
+      _observeMode: {
+        type: String,
+        observer: '_handleSelect',
       },
     },
 
-    handleSelect() {
-      const mode = this.$.dropdown.value;
-      if (mode === 'resemble') {
-        this._showResembleMode = true;
-        this._showOpacityMode = false;
-      } else if (mode === 'opacity') {
-        this._showOpacityMode = true;
-        this._showResembleMode = false;
-      }
+    attached() {
+      const diff_mode = this._getMode();
+      diff_mode === DiffModes.OPACITY ?
+          this._displayOpacityMode() : this._displayResembleMode();
+    },
+
+    _getMode() {
+      return window.localStorage.getItem('image-diff-mode');
+    },
+
+    _setMode(mode) {
+      window.localStorage.setItem('image-diff-mode', mode);
+    },
+
+    _handleSelect(mode) {
+      mode === DiffModes.OPACITY ?
+          this._displayOpacityMode() : this._displayResembleMode();
+    },
+
+    _displayResembleMode() {
+      this._observeMode = DiffModes.RESEMBLE;
+      this._showResembleMode = true;
+      this._showOpacityMode = false;
+      this._setMode(DiffModes.RESEMBLE);
+    },
+
+    _displayOpacityMode() {
+      this._observeMode = DiffModes.OPACITY;
+      this._showResembleMode = false;
+      this._showOpacityMode = true;
+      this._setMode(DiffModes.OPACITY);
     },
   });
 })();
