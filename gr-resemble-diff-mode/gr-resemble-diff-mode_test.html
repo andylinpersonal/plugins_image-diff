@@ -97,6 +97,27 @@ limitations under the License.
       assert.isTrue(element.reload.called);
     });
 
+    test('_handleColorChange', () => {
+      sandbox.stub(element, 'reload');
+      sandbox.stub(element, '_hexToRGB')
+          .returns({r: 0, g: 0, b: 0});
+      element._colorValue = '';
+      element.flushDebouncer('color-change');
+      flushAsynchronousOperations();
+
+      assert.isTrue(element._hexToRGB.called);
+      assert.isTrue(element.reload.called);
+    });
+
+    test('_hexToRGB', () => {
+      const expected = {r: 0, g: 255, b: 255};
+      const input = '#00ffff';
+      const output = element._hexToRGB(input);
+      assert.equal(output.r, expected.r);
+      assert.equal(output.g, expected.g);
+      assert.equal(output.b, expected.b);
+    });
+
     test('calls reload', () => {
       sandbox.stub(element, 'reload');
       element.baseImage = {};
