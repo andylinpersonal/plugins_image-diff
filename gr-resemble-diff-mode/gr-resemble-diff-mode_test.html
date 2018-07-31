@@ -78,9 +78,22 @@ limitations under the License.
       element._ignoreColors = false;
       assert.isFalse(element.$.ignoreColorsToggle.checked);
       MockInteractions.tap(element.$.ignoreColorsToggle);
+      element.flushDebouncer('ignore-colors-toggle');
       flushAsynchronousOperations();
 
       assert.isTrue(element._ignoreColors);
+      assert.isTrue(element.reload.called);
+    });
+
+    test('_handleTransparentToggle', () => {
+      sandbox.stub(element, 'reload');
+      element._transparent = false;
+      assert.isFalse(element.$.transparentToggle.checked);
+      MockInteractions.tap(element.$.transparentToggle);
+      element.flushDebouncer('transparent-toggle');
+      flushAsynchronousOperations();
+
+      assert.isTrue(element._transparent);
       assert.isTrue(element.reload.called);
     });
 
@@ -91,7 +104,11 @@ limitations under the License.
       element.revisionImage = {};
       assert.equal(element.reload.callCount, 1);
       MockInteractions.tap(element.$.ignoreColorsToggle);
+      element.flushDebouncer('ignore-colors-toggle');
       assert.equal(element.reload.callCount, 2);
+      MockInteractions.tap(element.$.transparentToggle);
+      element.flushDebouncer('transparent-toggle');
+      assert.equal(element.reload.callCount, 3);
     });
   });
 </script>
