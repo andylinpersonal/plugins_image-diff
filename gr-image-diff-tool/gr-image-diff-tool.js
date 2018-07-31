@@ -23,6 +23,13 @@
     is: 'gr-image-diff-tool',
 
     properties: {
+      baseImage: Object,
+      revisionImage: Object,
+      hidden: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true,
+      },
       _showResembleMode: Boolean,
       _showOpacityMode: Boolean,
       _observeMode: {
@@ -32,6 +39,10 @@
     },
 
     attached() {
+      if (!this.baseImage || !this.revisionImage) {
+        // No need to show the diff tool if there are no images.
+        this.hidden = true;
+      }
       const diff_mode = this._getMode();
       diff_mode === DiffModes.OPACITY ?
           this._displayOpacityMode() : this._displayResembleMode();

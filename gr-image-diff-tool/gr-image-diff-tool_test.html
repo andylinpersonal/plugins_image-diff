@@ -41,8 +41,9 @@ limitations under the License.
     let sandbox;
 
     setup(() => {
-      element = fixture('basicFixture');
       sandbox = sinon.sandbox.create();
+      element = fixture('basicFixture');
+      flushAsynchronousOperations();
     });
 
     teardown(() => { sandbox.restore(); });
