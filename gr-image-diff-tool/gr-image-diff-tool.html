@@ -21,9 +21,9 @@ limitations under the License.
   <template>
     <style>
       :host {
-        background-color: #f5f5f5;
-        font-family: var(--font-family);
+        background-color: #fafafa;
         display: block;
+        font-family: var(--font-family);
       }
       #header {
         align-items: center;
@@ -44,6 +44,11 @@ limitations under the License.
         margin-left: 1em;
         padding: 0 .15em;
       }
+      .diffmode {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+      }
     </style>
     <div id="header">
       <h3>Image Diff</h3>
@@ -52,16 +57,20 @@ limitations under the License.
         <option value="opacity">Opacity Mode</option>
       </select>
     </div>
-    <template is="dom-if" if="[[_showResembleMode]]" restamp="true">
-      <gr-resemble-diff-mode
-          base-image="[[baseImage]]"
-          revision-image="[[revisionImage]]"></gr-resemble-diff-mode>
-    </template>
-    <template is="dom-if" if="[[_showOpacityMode]]" restamp="true">
-      <gr-opacity-diff-mode
-          base-image="[[baseImage]]"
-          revision-image="[[revisionImage]]"></gr-opacity-diff-mode>
-    </template>
+    <div class="diffmode">
+      <template is="dom-if" if="[[_showResembleMode]]" restamp="true">
+        <gr-resemble-diff-mode
+            base-image="[[baseImage]]"
+            revision-image="[[revisionImage]]"></gr-resemble-diff-mode>
+      </template>
+    </div>
+    <div class="diffmode">
+      <template is="dom-if" if="[[_showOpacityMode]]" restamp="true">
+        <gr-opacity-diff-mode
+            base-image="[[baseImage]]"
+            revision-image="[[revisionImage]]"></gr-opacity-diff-mode>
+      </template>
+    </div>
   </template>
   <script src="gr-image-diff-tool.js"></script>
 </dom-module>
