@@ -61,6 +61,12 @@ limitations under the License.
       assert.equal(img.getAttribute('src'), src);
     });
 
+    test('_setDifferenceValue', () => {
+      const expected = 0.15;
+      element._setDifferenceValue(expected);
+      assert.equal(element._difference, expected);
+    });
+
     test('_maybeIgnoreColors', () => {
       const dummyProcess = {
         ignoreColors: sandbox.stub(),

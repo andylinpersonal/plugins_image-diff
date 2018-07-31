@@ -25,6 +25,10 @@
         observer: '_handleColorChange',
         value: '#00ffff',
       },
+      _difference: {
+        type: Number,
+        value: 0,
+      },
       _ignoreColors: {
         type: Boolean,
         value: false,
@@ -61,6 +65,10 @@
       this.$.imageDiff.src = src;
     },
 
+    _setDifferenceValue(percentage) {
+      this._difference = percentage;
+    },
+
     _getDataUrl(image) {
       return 'data:' + image['type'] + ';base64,' + image['body'];
     },
@@ -92,6 +100,7 @@
           this._createDiffProcess(base, rev, this._ignoreColors)
               .onComplete(data => {
                 this._setImageDiffSrc(data.getImageDataUrl());
+                this._setDifferenceValue(data.misMatchPercentage);
                 this.loading = false;
                 resolve();
               });
