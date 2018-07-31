@@ -124,6 +124,14 @@ limitations under the License.
       assert.equal(output.b, expected.b);
     });
 
+    test('_handleFullScreen', () => {
+      sandbox.stub(element, '_handleFullScreen');
+      MockInteractions.tap(element.$.fullscreen);
+      flushAsynchronousOperations();
+
+      assert.isTrue(element._handleFullScreen.called);
+    });
+
     test('calls reload', () => {
       sandbox.stub(element, 'reload');
       element.baseImage = {};
