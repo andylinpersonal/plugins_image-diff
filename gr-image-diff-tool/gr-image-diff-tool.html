@@ -21,7 +21,7 @@ limitations under the License.
   <template>
     <style>
       :host {
-        background-color: #fafafa;
+        background-color: var(--table-header-background-color, #fafafa);
         display: block;
         font-family: var(--font-family);
       }
@@ -37,8 +37,10 @@ limitations under the License.
         padding: 0 .5em;
       }
       #dropdown {
+        background-color: var(--view-background-color);
         border: 1px solid var(--border-color);
         border-radius: 2px;
+        color: var(--primary-text-color);
         font-size: var(--font-size-normal);
         height: 2em;
         margin-left: 1em;

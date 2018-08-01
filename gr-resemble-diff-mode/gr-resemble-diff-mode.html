@@ -34,17 +34,8 @@ limitations under the License.
       .toggle {
         padding: .5em;
       }
-      #color {
-        background-color: #f5f5f5;
-        border-radius: 2px;
-        outline: none;
-      }
-      #color:hover {
-        background-color: #eeeeee;
-      }
       #controlsContainer {
         align-items: center;
-        background-color: #f5f5f5;
         border-top: 1px solid var(--border-color, #ddd);
         display: flex;
         justify-content: space-between;
@@ -56,14 +47,24 @@ limitations under the License.
         display: block;
         width: 100%;
       }
-      #fullscreen {
-        background-color: #f5f5f5;
+      #color {
+        border: 1px solid var(--border-color, #ddd);
         border-radius: 2px;
-        outline: none;
+      }
+      #fullscreen {
+        border: 1px solid var(--border-color, #ddd);
+        border-radius: 2px;
+        color: var(--primary-text-color, #000);
         padding: .5em;
       }
+      #controlsContainer,
+      #color,
+      #fullscreen {
+        background-color: var(--table-header-background-color, #fafafa);
+      }
+      #color:hover,
       #fullscreen:hover {
-        background-color: #eeeeee;
+        background-color: var(--header-background-color, #eeeeee);
       }
       #imageDiff {
         display: block;
