@@ -79,6 +79,25 @@ limitations under the License.
       assert.isTrue(dummyProcess.ignoreColors.called);
     });
 
+    test('_setOutputSetting', () => {
+      sandbox.stub(window.resemble, 'outputSettings');
+      element._transparent = true;
+      element._colorValue = '#00ffff';
+      const expectedResult = {
+        transparency: 0.1,
+        errorColor: {
+          red: 0,
+          green: 255,
+          blue: 255,
+        },
+      };
+      element._createDiffProcess();
+      flushAsynchronousOperations();
+
+      assert.isTrue(window.resemble.outputSettings.called);
+      sinon.assert.calledWith(window.resemble.outputSettings, expectedResult);
+    });
+
     test('_handleIgnoreColorsToggle', () => {
       sandbox.stub(element, 'reload');
       element._ignoreColors = false;
@@ -105,13 +124,10 @@ limitations under the License.
 
     test('_handleColorChange', () => {
       sandbox.stub(element, 'reload');
-      sandbox.stub(element, '_hexToRGB')
-          .returns({r: 0, g: 0, b: 0});
       element._colorValue = '';
       element.flushDebouncer('color-change');
       flushAsynchronousOperations();
 
-      assert.isTrue(element._hexToRGB.called);
       assert.isTrue(element.reload.called);
     });
 

@@ -14,6 +14,11 @@
 (function() {
   'use strict';
 
+  const DEFAULT_SETTING = {
+    errorType: 'movement',
+    largeImageThreshold: 1200,
+  };
+
   Polymer({
     is: 'gr-resemble-diff-mode',
 
@@ -49,11 +54,7 @@
     ],
 
     attached() {
-      window.resemble.outputSettings({
-        errorType: 'movement',
-        largeImageThreshold: 0,
-        transparency: 1,
-      });
+      window.resemble.outputSettings(DEFAULT_SETTING);
     },
 
     _handleImageDiff() {
@@ -79,8 +80,21 @@
     },
 
     _createDiffProcess(base, rev, ignoreColors) {
+      window.resemble.outputSettings(this._setOutputSetting());
       const process = window.resemble(base).compareTo(rev);
       return this._maybeIgnoreColors(process, ignoreColors);
+    },
+
+    _setOutputSetting() {
+      const rgb = this._hexToRGB(this._colorValue);
+      return {
+        transparency: this._transparent ? 0.1 : 1,
+        errorColor: {
+          red: rgb.r,
+          green: rgb.g,
+          blue: rgb.b,
+        },
+      };
     },
 
     /**
@@ -121,9 +135,6 @@
     _handleTransparentToggle() {
       this.debounce('transparent-toggle', () => {
         this._transparent = !this._transparent;
-        window.resemble.outputSettings({
-          transparency: this._transparent ? 0.3 : 1,
-        });
         this.reload();
       }, 1);
     },
@@ -133,14 +144,6 @@
     // the color to show up immediately on the image diff.
     _handleColorChange() {
       this.debounce('color-change', () => {
-        const rgb = this._hexToRGB(this._colorValue);
-        window.resemble.outputSettings({
-          errorColor: {
-            red: rgb.r,
-            green: rgb.g,
-            blue: rgb.b,
-          },
-        });
         this.reload();
       }, 5);
     },
