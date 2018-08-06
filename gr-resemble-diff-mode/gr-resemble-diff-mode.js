@@ -15,7 +15,7 @@
   'use strict';
 
   const DEFAULT_SETTING = {
-    errorType: 'movement',
+    errorType: 'flat',
     largeImageThreshold: 1200,
   };
 
