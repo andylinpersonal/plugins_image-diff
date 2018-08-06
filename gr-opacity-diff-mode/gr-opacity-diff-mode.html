@@ -32,7 +32,7 @@ limitations under the License.
       }
       #imageRevision {
         opacity: var(--my-opacity-value);
-        z-index: 1;
+        z-index: 0.5;
       }
       #imageDiffContainer {
         height: var(--div-height);
@@ -51,14 +51,12 @@ limitations under the License.
         width: 100%;
       }
       label {
+        align-items: center;
+        display: flex;
         padding: 1em .5em;
       }
       input {
-        padding: 1em 0;
-      }
-      .cell {
-        align-items: center;
-        display: flex;
+        margin: .5em;
       }
       #opacitySlider {
         width: 10em;
@@ -66,24 +64,20 @@ limitations under the License.
     </style>
     <div class="wrapper">
       <div id="imageDiffContainer">
-        <img id="imageBase"/>
-        <img data-opacity$="{{opacityValue}}" id="imageRevision"/>
+        <img on-load="_onImageLoad" id="imageBase"/>
+        <img on-load="_onImageLoad" data-opacity$="{{opacityValue}}" id="imageRevision"/>
       </div>
       <div id="controlsContainer">
         <div id="controlsBox">
-          <div class="cell">
+          <label>
             <input
                 id="scaleSizesToggle"
                 on-tap="handleScaleSizesToggle"
                 type="checkbox">
-            <label for="scaleSizesToggle">
-              Scale to same size
-            </label>
-          </div>
-          <div class="cell">
-            <label for="opacitySlider">
-              Revision image opacity
-            </label>
+            Scale to same size
+          </label>
+          <label>
+            Revision image opacity
             <input
                 id="opacitySlider"
                 max="1.0"
@@ -92,10 +86,10 @@ limitations under the License.
                 step=".01"
                 type="range"
                 value="0.5"/>
-          </div>
+          </label>
         </div>
       </div>
     </div>
   </template>
- <script src="gr-opacity-diff-mode.js"></script>
+  <script src="gr-opacity-diff-mode.js"></script>
 </dom-module>

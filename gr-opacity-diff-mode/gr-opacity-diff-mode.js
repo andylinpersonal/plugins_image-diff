@@ -20,19 +20,35 @@
       baseImage: Object,
       revisionImage: Object,
       opacityValue: Number,
+      _maxHeight: {
+        type: Number,
+        value: 0,
+      },
+      _maxWidth: {
+        type: Number,
+        value: 0,
+      },
     },
 
-    attached() {
-      if (this.revisionImage) {
-        const srcRevision = this.computeSrcString(this.revisionImage);
-        this.$.imageRevision.setAttribute('src', srcRevision);
-        this.handleOpacityChange();
-      }
-      if (this.baseImage) {
-        const srcBase = this.computeSrcString(this.baseImage);
-        this.$.imageBase.setAttribute('src', srcBase);
-      }
-      this.resizeDiffContainerHeight();
+    observers: [
+      '_handleImageChange(baseImage, revisionImage)',
+      '_handleHeightChange(_maxHeight)',
+      '_handleWidthChange(_maxWidth)',
+    ],
+
+    _onImageLoad(e) {
+      this._maxHeight = Math.max(this._maxHeight,
+          Polymer.dom(e).rootTarget.naturalHeight);
+      this._maxWidth = Math.max(this._maxWidth,
+          Polymer.dom(e).rootTarget.naturalWidth);
+    },
+
+    _handleImageChange(baseImage, revisionImage) {
+      this.$.imageRevision.setAttribute('src',
+          this.computeSrcString(this.revisionImage));
+      this.$.imageBase.setAttribute('src',
+          this.computeSrcString(this.baseImage));
+      this.handleOpacityChange();
     },
 
     handleOpacityChange() {
@@ -47,25 +63,25 @@
     handleScaleSizesToggle() {
       let width;
       let height;
-      if (this.$.scaleSizesToggle.checked &&
-          this.baseImage && this.revisionImage) {
-        width = Math.max(this.revisionImage._width, this.baseImage._width);
-        height = Math.max(this.revisionImage._height, this.baseImage._height);
+      if (this.$.scaleSizesToggle.checked) {
+        width = this._maxWidth;
+        height = this._maxHeight;
       }
+
       this.customStyle['--img-width'] = width ? width + 'px' : null;
       this.customStyle['--img-height'] = height ? height + 'px' : null;
       this.updateStyles();
     },
 
-    resizeDiffContainerHeight() {
-      const maxHeight = Math.max(
-          this.baseImage ? this.baseImage._height : 0,
-          this.revisionImage ? this.revisionImage._height : 0);
-      this.customStyle['--div-height'] = maxHeight + 'px';
-      const maxWidth = Math.max(
-          this.baseImage ? this.baseImage._width : 0,
-          this.revisionImage ? this.revisionImage._width : 0);
-      this.customStyle['--div-width'] = maxWidth + 'px';
+    _handleHeightChange(height) {
+      if (!height) { return; }
+      this.customStyle['--div-height'] = height + 'px';
+      this.updateStyles();
+    },
+
+    _handleWidthChange(width) {
+      if (!width) { return; }
+      this.customStyle['--div-width'] = width + 'px';
       this.updateStyles();
     },
   });
