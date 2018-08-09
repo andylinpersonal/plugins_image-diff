@@ -53,10 +53,10 @@ limitations under the License.
       }
     </style>
     <div id="header">
-      <h3>Image Diff</h3>
+      <h3>Image diff</h3>
       <select value="{{_observeMode::change}}" id="dropdown">
-        <option value="resemble">Resemble Mode</option>
-        <option value="opacity">Opacity Mode</option>
+        <option value="resemble" title="Scale the images to the same size and compute a diff with highlights">Highlight differences</option>
+        <option value="opacity" title="Overlay the new image over the old and use an opacity control to view the differences">Onion skin</option>
       </select>
     </div>
     <div class="diffmode">
