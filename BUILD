@@ -7,7 +7,7 @@ gerrit_plugin(
     srcs = ["java/com/googlesource/gerrit/plugins/imagediff/ImageDiffModule.java"],
     manifest_entries = [
         "Gerrit-PluginName: image-diff",
-        "Gerrit-Module: com.googlesource.gerrit.plugins.imagediff.ImageDiffModule",
+        "Gerrit-Module: com.googlesource.gerrit.plugins.codemirror.ImageDiffModule",
         "Implementation-Title: Image Diff plugin",
     ],
     resource_jars = [":image-diff-static"],
