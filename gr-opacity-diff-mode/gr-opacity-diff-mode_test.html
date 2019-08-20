@@ -33,6 +33,18 @@ limitations under the License.
 </test-fixture>
 
 <script>
+  function getComputedStyleValue(name, el) {
+    let style;
+    if (window.ShadyCSS) {
+      style = ShadyCSS.getComputedStyleValue(el, name);
+    } else if (el.getComputedStyleValue) {
+      style = el.getComputedStyleValue(name);
+    } else {
+      style = getComputedStyle(el).getPropertyValue(name);
+    }
+    return style;
+  };
+
   suite('gr-opacity-diff-tool tests', () => {
     let element;
 
@@ -43,10 +55,14 @@ limitations under the License.
     test('slider changes opacity of image', () => {
       const arrayOfNumbers = [0.73, 0.5, 0.0];
       arrayOfNumbers.forEach(number => {
-        assert.notEqual(element.customStyle['--my-opacity-value'], number);
+        assert.notEqual(
+          getComputedStyleValue('--my-opacity-value', element),
+          number);
         element.$.opacitySlider.value = number;
         element.handleOpacityChange();
-        assert.equal(element.customStyle['--my-opacity-value'], number);
+        assert.equal(
+          getComputedStyleValue('--my-opacity-value', element),
+          number);
       });
     });
 
@@ -64,22 +80,22 @@ limitations under the License.
       element._maxWidth = 200;
       element._maxHeight = 400;
 
-      assert.equal(element.customStyle['--img-width'], null);
-      assert.equal(element.customStyle['--img-height'], null);
+      assert.equal(getComputedStyleValue('--img-width', element), '');
+      assert.equal(getComputedStyleValue('--img-height', element), '');
       MockInteractions.tap(element.$.scaleSizesToggle);
       flushAsynchronousOperations();
 
-      assert.equal(element.customStyle['--img-width'], '200px');
-      assert.equal(element.customStyle['--img-height'], '400px');
+      assert.equal(getComputedStyleValue('--img-width', element), '200px');
+      assert.equal(getComputedStyleValue('--img-height', element), '400px');
     });
 
     test('resize the div container for base & revision image comparison', () => {
-      assert.equal(element.customStyle['--div-height'], undefined);
+      assert.equal(getComputedStyleValue('--div-height', element), '');
       element._maxHeight = 500;
       element._maxWidth = 300;
       flushAsynchronousOperations();
 
-      assert.equal(element.customStyle['--div-height'], '500px');
+      assert.equal(getComputedStyleValue('--div-height', element), '500px');
     });
   });
 </script>

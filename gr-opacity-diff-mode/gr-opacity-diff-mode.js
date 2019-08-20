@@ -52,8 +52,7 @@
     },
 
     handleOpacityChange() {
-      this.customStyle['--my-opacity-value'] = this.$.opacitySlider.value;
-      this.updateStyles();
+      this.updateStyles({'--my-opacity-value': this.$.opacitySlider.value});
     },
 
     computeSrcString(image) {
@@ -68,21 +67,20 @@
         height = this._maxHeight;
       }
 
-      this.customStyle['--img-width'] = width ? width + 'px' : null;
-      this.customStyle['--img-height'] = height ? height + 'px' : null;
-      this.updateStyles();
+      this.updateStyles({
+        '--img-width': width ? width + 'px' : null,
+        '--img-height': height ? height + 'px' : null,
+      });
     },
 
     _handleHeightChange(height) {
       if (!height) { return; }
-      this.customStyle['--div-height'] = height + 'px';
-      this.updateStyles();
+      this.updateStyles({'--div-height': `${height}px`});
     },
 
     _handleWidthChange(width) {
       if (!width) { return; }
-      this.customStyle['--div-width'] = width + 'px';
-      this.updateStyles();
+      this.updateStyles({'--div-width': `${width}px`});
     },
   });
 })();
