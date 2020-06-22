@@ -13,18 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+<meta charset="utf-8">
 <title>gr-opacity-diff-mode</title>
-
-<link rel="import" href="../node_modules/polymer/polymer.html">
-<link rel="import" href="../node_modules/@polymer/test-fixture/test-fixture.html">
-<link rel="import" href="../node_modules/iron-test-helpers/iron-test-helpers.html">
-<link rel="import" href="./gr-opacity-diff-mode.html">
-
-<script>void(0);</script>
-
-<script src="../node_modules/webcomponents.js/webcomponents-lite.min.js"></script>
-<script src="../node_modules/web-component-tester/browser.js"></script>
-<script src="../node_modules/@polymer/sinonjs/sinon.js"></script>
+<script src="/node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
+<script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+<script src="../bower_components/web-component-tester/browser.js"></script>
 
 <test-fixture id='opacity-diff-fixture'>
   <template>
@@ -32,7 +25,9 @@ limitations under the License.
   </template>
 </test-fixture>
 
-<script>
+<script type="module">
+  import '../test/common-test-setup.js';
+  import "./gr-opacity-diff-mode.js";
   function getComputedStyleValue(name, el) {
     let style;
     if (window.ShadyCSS) {

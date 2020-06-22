@@ -15,18 +15,12 @@ limitations under the License.
 -->
 
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+<meta charset="utf-8">
 <title>resemble-diff-mode</title>
-
-<link rel="import" href="../node_modules/polymer/polymer.html">
-<link rel="import" href="../node_modules/@polymer/test-fixture/test-fixture.html">
-<link rel="import" href="../node_modules/iron-test-helpers/iron-test-helpers.html">
-<link rel="import" href="./gr-resemble-diff-mode.html">
-
-<script>void(0);</script>
-
-<script src="../node_modules/webcomponents.js/webcomponents-lite.min.js"></script>
-<script src="../node_modules/web-component-tester/browser.js"></script>
-<script src="../node_modules/@polymer/sinonjs/sinon.js"></script>
+<script src="/node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
+<script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+<script src="../bower_components/web-component-tester/browser.js"></script>
+<script src="../node_modules/resemblejs/resemble.js"></script>
 
 <test-fixture id="basicFixture">
   <template>
@@ -35,7 +29,9 @@ limitations under the License.
   </template>
 </test-fixture>
 
-<script>
+<script type="module">
+  import '../test/common-test-setup.js';
+  import "./gr-resemble-diff-mode.js";
   suite('gr-resemble-diff-mode tests', () => {
     let element;
     let sandbox;
@@ -103,7 +99,7 @@ limitations under the License.
       element._ignoreColors = false;
       assert.isFalse(element.$.ignoreColorsToggle.checked);
       MockInteractions.tap(element.$.ignoreColorsToggle);
-      element.flushDebouncer('ignore-colors-toggle');
+      element._ignoreColorsToggleJob.flush();
       flushAsynchronousOperations();
 
       assert.isTrue(element._ignoreColors);
@@ -115,7 +111,7 @@ limitations under the License.
       element._transparent = false;
       assert.isFalse(element.$.transparentToggle.checked);
       MockInteractions.tap(element.$.transparentToggle);
-      element.flushDebouncer('transparent-toggle');
+      element._transparentToggleJob.flush();
       flushAsynchronousOperations();
 
       assert.isTrue(element._transparent);
@@ -125,7 +121,7 @@ limitations under the License.
     test('_handleColorChange', () => {
       sandbox.stub(element, 'reload');
       element._colorValue = '';
-      element.flushDebouncer('color-change');
+      element._colorChangeJob.flush();
       flushAsynchronousOperations();
 
       assert.isTrue(element.reload.called);
@@ -155,10 +151,10 @@ limitations under the License.
       element.revisionImage = {};
       assert.equal(element.reload.callCount, 1);
       MockInteractions.tap(element.$.ignoreColorsToggle);
-      element.flushDebouncer('ignore-colors-toggle');
+      element._ignoreColorsToggleJob.flush();
       assert.equal(element.reload.callCount, 2);
       MockInteractions.tap(element.$.transparentToggle);
-      element.flushDebouncer('transparent-toggle');
+      element._transparentToggleJob.flush();
       assert.equal(element.reload.callCount, 3);
     });
   });

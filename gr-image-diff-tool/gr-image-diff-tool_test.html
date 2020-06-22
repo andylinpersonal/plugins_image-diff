@@ -15,18 +15,12 @@ limitations under the License.
 -->
 
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+<meta charset="utf-8">
 <title>image-diff-tool</title>
-
-<link rel="import" href="../node_modules/polymer/polymer.html">
-<link rel="import" href="../node_modules/@polymer/test-fixture/test-fixture.html">
-<link rel="import" href="../node_modules/iron-test-helpers/iron-test-helpers.html">
-<link rel="import" href="./gr-image-diff-tool.html">
-
-<script>void(0);</script>
-
-<script src="../node_modules/webcomponents.js/webcomponents-lite.min.js"></script>
-<script src="../node_modules/web-component-tester/browser.js"></script>
-<script src="../node_modules/@polymer/sinonjs/sinon.js"></script>
+<script src="/node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
+<script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+<script src="../bower_components/web-component-tester/browser.js"></script>
+<script src="../node_modules/resemblejs/resemble.js"></script>
 
 <test-fixture id="basicFixture">
   <template>
@@ -35,7 +29,9 @@ limitations under the License.
   </template>
 </test-fixture>
 
-<script>
+<script type="module">
+  import '../test/common-test-setup.js';
+  import "./gr-image-diff-tool.js";
   suite('gr-image-diff-tool tests', () => {
     let element;
     let sandbox;
@@ -54,8 +50,8 @@ limitations under the License.
       assert.isFalse(element._showResembleMode);
       flushAsynchronousOperations();
 
-      assert.ok(element.$$('gr-opacity-diff-mode'));
-      assert.equal(element.$$('gr-resemble-diff-mode'), null);
+      assert.ok(element.shadowRoot.querySelector('gr-opacity-diff-mode'));
+      assert.equal(element.shadowRoot.querySelector('gr-resemble-diff-mode'), null);
     });
 
     test('test resemble mode', () => {
@@ -64,14 +60,14 @@ limitations under the License.
       assert.isFalse(element._showOpacityMode);
       flushAsynchronousOperations();
 
-      assert.ok(element.$$('gr-resemble-diff-mode'));
-      assert.equal(element.$$('gr-opacity-diff-mode'), null);
+      assert.ok(element.shadowRoot.querySelector('gr-resemble-diff-mode'));
+      assert.equal(element.shadowRoot.querySelector('gr-opacity-diff-mode'), null);
     });
 
     test('localStorage persists', () => {
       sandbox.stub(element, '_setMode');
       sandbox.stub(element, '_getMode');
-      element.attached();
+      element.connectedCallback();
       assert.equal(element._getMode.callCount, 1);
       assert.equal(element._setMode.callCount, 1);
       element._observeMode = 'opacity';

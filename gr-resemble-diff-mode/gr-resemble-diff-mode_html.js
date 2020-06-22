@@ -1,22 +1,21 @@
-<!--
-Copyright (C) 2018 The Android Open Source Project
+/**
+ * @license
+ * Copyright (C) 2020 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--->
-
-<script src="../bower_components/resemblejs/resemble.js"></script>
-<dom-module id="gr-resemble-diff-mode">
-  <template>
+export const htmlTemplate = Polymer.html`
     <style>
       :host {
         display: block;
@@ -91,7 +90,7 @@ limitations under the License.
               id="ignoreColorsToggle"
               type="checkbox"
               checked$="[[_ignoreColors]]"
-              on-tap="_handleIgnoreColorsToggle">
+              on-click="_handleIgnoreColorsToggle">
           Ignore colors
         </label>
         <label class="toggle">
@@ -99,7 +98,7 @@ limitations under the License.
               id="transparentToggle"
               type="checkbox"
               checked$="[[_transparent]]"
-              on-tap="_handleTransparentToggle">
+              on-click="_handleTransparentToggle">
           Transparent
         </label>
         <input
@@ -108,11 +107,8 @@ limitations under the License.
             value="{{_colorValue::change}}">
         <button
             id="fullscreen"
-            on-tap="_handleFullScreen">
+            on-click="_handleFullScreen">
           View full sized
         </button>
       </div>
-    </div>
-  </template>
-  <script src="gr-resemble-diff-mode.js"></script>
-</dom-module>
+    </div>`;

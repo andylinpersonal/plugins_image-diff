@@ -7,27 +7,11 @@ Currently, the plugin features two modes: Highlight Mode and Onion Skin.
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### Prerequisites
+### Build
 
-[Yarn](https://yarnpkg.com/en/) - Node package manager
-
-### Installing
-
-Use Homebrew to install yarn on macOS:
-
-```
-brew install yarn
-```
-
-Reference [here](https://yarnpkg.com/en/docs/install#mac-stable) for instruction on how to install on other systems.
-
-Clone the repo and run
-
-```
-yarn install
-```
-
-to install the dependencies.
+1. Clone the package into `plugins` folder of `gerrit` repo or link the plugin folder to `gerrit/plugins` folder
+2. Override `plugins/package.json` with `package.json`, you can remove all `depDependencies` as they are not needed for the build (needed for running wct tests)
+3. Run `bazel build plugins/image-diff`
 
 ## Highlight Mode
 
@@ -58,6 +42,8 @@ The following features are included in this mode:
 This plugin uses [polymer-cli](https://www.polymer-project.org/1.0/docs/tools/polymer-cli#install) to test.
 
 Inside your image-diff repo, run `polymer serve` to start a local web server and open `localhost:8080/test` to view your tests. See [here](https://www.polymer-project.org/2.0/docs/tools/polymer-cli-commands#serve) for more info.
+
+Or run `npm run wct-test` to run all your tests.
 
 ## Development
 
