@@ -76,8 +76,8 @@ class ResembleDiffMode extends Polymer.Element {
   }
 
   _setImageDiffSrc(src) {
-    delete this.$.imageDiff.src;
-    this.$.imageDiff.src = src;
+    this.$.imageDiff.removeAttribute('src');
+    this.$.imageDiff.setAttribute('src', src);
   }
 
   _setDifferenceValue(percentage) {
