@@ -188,7 +188,7 @@ class ResembleDiffMode extends Polymer.Element {
 
   _handleFullScreen() {
     const w = window.open('about:blank', '_blank');
-    w.document.body.innerHTML = this.$.imageDiff.outerHTML;
+    w.document.body.appendChild(this.$.imageDiff.cloneNode(true));
   }
 }
 
