@@ -16,7 +16,7 @@
  */
 
 export const htmlTemplate = Polymer.html`
-<style>
+<style include="shared-styles">
   :host {
     background-color: var(--table-header-background-color, #fafafa);
     display: block;
