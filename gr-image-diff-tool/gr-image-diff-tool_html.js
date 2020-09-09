@@ -22,6 +22,12 @@ export const htmlTemplate = Polymer.html`
     display: block;
     font-family: var(--font-family);
   }
+  /** This is needed as we have explicit display on :host
+    * which will override hidden from shared-styles
+    */
+  :host[hidden] {
+    display: none;
+  }
   #header {
     align-items: center;
     border-bottom: 1px solid var(--border-color, #ddd);
