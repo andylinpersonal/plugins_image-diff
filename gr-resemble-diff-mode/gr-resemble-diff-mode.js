@@ -138,41 +138,18 @@ class ResembleDiffMode extends Polymer.Element {
     this.loading = false;
   }
 
-  // The use of debounce is to prevent the user from repeatedly calling the
-  // functions in a short amount of time.
   _handleIgnoreColorsToggle() {
-    this._ignoreColorsToggleJob = Polymer.Debouncer.debounce(
-        this._ignoreColorsToggleJob,
-        Polymer.Async.timeOut.after(1),
-        () => {
-          this._ignoreColors = !this._ignoreColors;
-          this.reload();
-        }
-    );
+    this._ignoreColors = !this._ignoreColors;
+    this.reload();
   }
 
   _handleTransparentToggle() {
-    this._transparentToggleJob = Polymer.Debouncer.debounce(
-        this._transparentToggleJob,
-        Polymer.Async.timeOut.after(1),
-        () => {
-          this._transparent = !this._transparent;
-          this.reload();
-        }
-    );
+    this._transparent = !this._transparent;
+    this.reload();
   }
 
-  // The wait time of 5 ms allows users to see the color change in the image
-  // diff relatively close to real time. Any larger wait time will not allow
-  // the color to show up immediately on the image diff.
   _handleColorChange() {
-    this._colorChangeJob = Polymer.Debouncer.debounce(
-        this._colorChangeJob,
-        Polymer.Async.timeOut.after(5),
-        () => {
-          this.reload();
-        }
-    );
+    this.reload();
   }
 
   _hexToRGB(hex) {

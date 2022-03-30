@@ -99,7 +99,6 @@ limitations under the License.
       element._ignoreColors = false;
       assert.isFalse(element.$.ignoreColorsToggle.checked);
       MockInteractions.tap(element.$.ignoreColorsToggle);
-      element._ignoreColorsToggleJob.flush();
       flushAsynchronousOperations();
 
       assert.isTrue(element._ignoreColors);
@@ -111,7 +110,6 @@ limitations under the License.
       element._transparent = false;
       assert.isFalse(element.$.transparentToggle.checked);
       MockInteractions.tap(element.$.transparentToggle);
-      element._transparentToggleJob.flush();
       flushAsynchronousOperations();
 
       assert.isTrue(element._transparent);
@@ -121,14 +119,13 @@ limitations under the License.
     test('_handleColorChange', () => {
       sandbox.stub(element, 'reload');
       element._colorValue = '';
-      element._colorChangeJob.flush();
       flushAsynchronousOperations();
 
       assert.isTrue(element.reload.called);
     });
 
     test('_hexToRGB', () => {
-      const expected = {r: 0, g: 255, b: 255};
+      const expected = { r: 0, g: 255, b: 255 };
       const input = '#00ffff';
       const output = element._hexToRGB(input);
       assert.equal(output.r, expected.r);
@@ -151,10 +148,8 @@ limitations under the License.
       element.revisionImage = {};
       assert.equal(element.reload.callCount, 1);
       MockInteractions.tap(element.$.ignoreColorsToggle);
-      element._ignoreColorsToggleJob.flush();
       assert.equal(element.reload.callCount, 2);
       MockInteractions.tap(element.$.transparentToggle);
-      element._transparentToggleJob.flush();
       assert.equal(element.reload.callCount, 3);
     });
   });
