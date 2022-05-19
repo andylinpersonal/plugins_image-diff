@@ -10,7 +10,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Build
 
 1. Clone the package into `plugins` folder of `gerrit` repo or link the plugin folder to `gerrit/plugins` folder
-2. Override `plugins/package.json` with `package.json`, you can remove all `depDependencies` as they are not needed for the build (needed for running wct tests)
+2. Override `plugins/package.json` with `external_package.json`, you can remove all `depDependencies` as they are not needed for the build (needed for running wct tests)
 3. Run `bazel build plugins/image-diff`
 
 ## Highlight Mode
