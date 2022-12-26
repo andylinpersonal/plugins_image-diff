@@ -33,7 +33,7 @@ export default {  // eslint-disable-line
   },
   plugins: [resolve({
     customResolveOptions: {
-      moduleDirectory: 'external/plugins_npm/node_modules',
+      moduleDirectory: 'node_modules',
     },
   })],
 };
