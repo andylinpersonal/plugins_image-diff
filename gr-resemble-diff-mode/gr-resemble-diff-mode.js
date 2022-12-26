@@ -37,7 +37,7 @@ class ResembleDiffMode extends Polymer.Element {
       _colorValue: {
         type: String,
         observer: '_handleColorChange',
-        value: '#00ffff',
+        value: '#ff0000',
       },
       _difference: {
         type: Number,
