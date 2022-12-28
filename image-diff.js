@@ -178,9 +178,81 @@
 				Polymer.dom(e).rootTarget.naturalWidth
 			);
 
+			this._imageSize = 100
+			this._imageMinSize = 50
+			this._zoomDelta = 5
 			this.updateStyles({
-				'--img-width': '100%'
+				'--img-width': `${this._imageSize}%`
 			});
+
+			this.addEventListener('wheel', this._onZoom)
+			// this.addEventListener('mousedown', this._onMouse)
+			this.addEventListener('mouseup',   this._onMouse)
+			this.addEventListener('mouseout',  this._onMouse)
+			this.addEventListener('dblclick',  this._onMouse)
+			this._isZooming = false
+			this._zoomThreshold = 50
+		}
+
+		/**
+		 * @param {WheelEvent} ev
+		*/
+		_onZoom(ev) {
+			if (this._isZooming) {
+				// disable scrolling while zooming
+				ev.preventDefault();
+
+				if (this._isZooming && Math.abs(ev.deltaY) > this._zoomThreshold) {
+
+					const zoomOut = ev.deltaY > 0;
+
+					this._imageSize += (zoomOut ? -this._zoomDelta : this._zoomDelta) * Math.abs(ev.deltaY) / this._zoomThreshold;
+
+					if (this._imageSize < this._imageMinSize) {
+						this._imageSize = this._imageMinSize
+					}
+
+					this.updateStyles({
+						'--img-width': `${this._imageSize}%`,
+						'cursor': zoomOut ? 'zoom-out' : 'zoom-in',
+					});
+				}
+			}
+		}
+
+		/**
+		 * @param {MouseEvent} ev
+		*/
+		_onMouse(ev) {
+			let newStyles = {}
+			// middle button
+			if (ev.button == 1) {
+				if (ev.type == 'mouseup') {
+					this._isZooming = !this._isZooming
+					if (!this._isZooming)
+						newStyles = { 'cursor': 'auto' }
+				}
+			}
+
+			// cancel zooming as mouse moving out the element
+			if (ev.type == 'mouseout') {
+				this._isZooming = false
+				newStyles = {
+					'cursor': 'auto',
+				};
+			}
+
+			// reset to default size when dblclick fired
+			if (ev.type == 'dblclick') {
+				this._isZooming = false
+				this._imageSize = 100
+				newStyles = {
+					'--img-width': `${this._imageSize}%`,
+					'cursor': 'auto',
+				};
+			}
+
+			this.updateStyles(newStyles)
 		}
 
 		_handleImageChange(baseImage, revisionImage) {
