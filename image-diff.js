@@ -14,9 +14,13 @@
 			<style>
 				:host {
 					display: block;
+					cursor: grab;
 				}
-				#viewport { height: 100%; width: 100%; overflow: auto; cursor: grab; }
+                #viewport { height: 100%; width: 100%; overflow: visible; cursor: grab; }
 				#viewport.manipulating { cursor: grabbing; }
+				::slotted(*) {
+					transform: scale(var(--img-zoom, 1)) translate(var(--img-clientX, 0), var(--img-clientY, 0));
+				}
 			</style>
 			<div id="viewport">
 				<slot></slot>
@@ -70,60 +74,76 @@
 			self._onPointerDown = self._onPointerDown.bind(self);
 			self._onPointerMove = self._onPointerMove.bind(self);
 			self._onPointerUp = self._onPointerUp.bind(self);
+			self._onDblClick = self._onDblClick.bind(self);
 		}
 
 		connectedCallback() {
 			super.connectedCallback()
 			this._attachEvents();
-			this.$.viewport.style.zoom = this.zoom
+			this._handleZoom(this.zoom);
 		}
 
 		_attachEvents() {
 			this.$.viewport.addEventListener("wheel", this._onWheel);
 			this.$.viewport.addEventListener("pointerdown", this._onPointerDown);
+
+			// initial offset
+			this._translateOffset = [0, 0]
 		}
 
+		/** @param {WheelEvent} e */
 		_onWheel(e) {
 			e.preventDefault();
-			this.zoom += e.deltaY / 1000;
+			// I'm not Mac's user :(
+			if (this.zoom - e.deltaY / 1000 >= this.minZoom)
+				this.zoom -= e.deltaY / 1000;
 		}
 
+		/** @param {PointerEvent} e */
 		_onPointerDown(e) {
 			if (!this._isModifierDown(e)) return
 			e.preventDefault()
-			this.$.viewport.classList.add("manipulating")
+			this.classList.add("manipulating")
+
 			this._lastPointer = [
-				e.offsetX,
-				e.offsetY
+				e.clientX,
+				e.clientY
 			]
 
-			this._lastScroll = [
-				this.$.viewport.scrollLeft,
-				this.$.viewport.scrollTop
-			]
+			this._lastOffset = [...this.translateOffset]
 
 			this.$.viewport.setPointerCapture(e.pointerId)
 			this.$.viewport.addEventListener("pointermove", this._onPointerMove)
 			this.$.viewport.addEventListener("pointerup", this._onPointerUp)
+			this.$.viewport.addEventListener("pointerleave", this._onPointerUp)
+			this.$.viewport.addEventListener("dblclick", this._onDblClick)
 		}
-		_onPointerMove(e) {
-			const currentPointer = [
-				e.offsetX,
-				e.offsetY
-			];
-			const delta = [
-				currentPointer[0] + this._lastScroll[0] - this._lastPointer[0],
-				currentPointer[1] + this._lastScroll[1] - this._lastPointer[1]
-			];
 
-			this.$.viewport.scroll(this._lastScroll[0] / this.zoom - delta[0] / this.zoom, this._lastScroll[1] / this.zoom - delta[1] / this.zoom, { behavior: "instant" });
+		/** @param {PointerEvent} e */
+		_onPointerMove(e) {
+			this.translateOffset = [
+				(e.clientX - this._lastPointer[0]) / this._zoom + this._lastOffset[0],
+				(e.clientY - this._lastPointer[1]) / this._zoom + this._lastOffset[1]
+			]
 		}
+
+		/** @param {PointerEvent} e */
 		_onPointerUp(e) {
 			this.$.viewport.classList.remove("manipulating");
 			this.$.viewport.removeEventListener("pointermove", this._onPointerMove)
 			this.$.viewport.removeEventListener("pointerup", this._onPointerUp)
+			this.$.viewport.removeEventListener("pointerleave", this._onPointerUp)
 			this.$.viewport.releasePointerCapture(e.pointerId);
 		}
+
+		/**
+		 * @description reset offset and zooming
+		 * @param {PointerEvent} e */
+		_onDblClick(e) {
+			this.translateOffset = [0, 0]
+			this._handleZoom(1)
+		}
+
 		_isModifierDown(e) {
 			if (!this.modifierKey) return true;
 			if (this.modifierKey === "ctrl" && e.ctrlKey) return true;
@@ -134,7 +154,19 @@
 
 		_handleZoom(val) {
 			this._zoom = Math.min(Math.max(parseFloat(val), this.minZoom), this.maxZoom);
-			this.$.viewport.style.zoom = this._zoom;
+			this.updateStyles({ '--img-zoom': this._zoom });
+		}
+
+		set translateOffset(val) {
+			this._translateOffset = [val[0], val[1]]
+			this.updateStyles({
+				'--img-clientX': `${this._translateOffset[0]}px`,
+				'--img-clientY': `${this._translateOffset[1]}px`,
+			})
+		}
+
+		get translateOffset() {
+			return this._translateOffset
 		}
 	}
 
@@ -174,15 +206,11 @@
 	}
 	.wrapper {
 		box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
-		/*display: block;
-		overflow: auto; */
 	}
 	img {
 		display: block;
 		margin: auto;
 		position: absolute;
-		/*height: var(--img-height);
-		width: var(--img-width);*/
 		width: 100%;
 	}
 	#imageRevision {
@@ -190,7 +218,8 @@
 	}
 	#imageDiffContainer {
 		height: 50vh;
-		overflow: auto;
+		overflow-x: visible;
+		overflow-y: clip;
 		position: relative;
 		width: 80%;
 		margin: auto;
@@ -230,12 +259,12 @@
 		<onion-diff-mode base-image="[[baseImage]]" revision-image="[[revisionImage]]"></onion-diff-mode>
 	</template>
 </div>
-<image-diff-pan-box min-zoom="0.5" class="wrapper">
-	<div id="imageDiffContainer">
+<div class="wrapper">
+	<image-diff-pan-box zoom="1" min-zoom="0.5" id="imageDiffContainer">
 		<img on-load="_onImageLoad" id="imageBase"/>
 		<img on-load="_onImageLoad" data-opacity$="{{opacityValue}}" id="imageRevision"/>
-	</div>
-</image-diff-pan-box>`;
+	</image-diff-pan-box>
+<div>`;
 
 	const DiffModes = {
 		ONION: 'onion',
@@ -305,8 +334,6 @@
 		static get observers() {
 			return [
 				'_handleImageChange(baseImage, revisionImage)',
-				// '_handleHeightChange(_maxHeight)',
-				// '_handleWidthChange(_maxWidth)',
 			];
 		}
 
