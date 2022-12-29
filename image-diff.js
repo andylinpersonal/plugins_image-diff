@@ -16,14 +16,16 @@
 					display: block;
 					cursor: grab;
 				}
-                #viewport { height: 100%; width: 100%; overflow: visible; cursor: grab; }
+				#viewport { height: 100%; width: 100%; overflow: visible; cursor: grab; }
 				#viewport.manipulating { cursor: grabbing; }
-				::slotted(*) {
+				#transform {
 					transform: scale(var(--img-zoom, 1)) translate(var(--img-clientX, 0), var(--img-clientY, 0));
 				}
 			</style>
 			<div id="viewport">
-				<slot></slot>
+				<div id="transform">
+					<slot></slot>
+				</div>
 			</div>
 			`;
 		}
@@ -95,8 +97,8 @@
 		_onWheel(e) {
 			e.preventDefault();
 			// I'm not Mac's user :(
-			if (this.zoom - e.deltaY / 1000 >= this.minZoom)
-				this.zoom -= e.deltaY / 1000;
+			if (this.zoom >= this.minZoom)
+				this.zoom += Math.sign(e.deltaY) * -0.125;
 		}
 
 		/** @param {PointerEvent} e */
@@ -153,7 +155,7 @@
 		}
 
 		_handleZoom(val) {
-			this._zoom = Math.min(Math.max(parseFloat(val), this.minZoom), this.maxZoom);
+			this.zoom = this._zoom = Math.min(Math.max(parseFloat(val), this.minZoom), this.maxZoom);
 			this.updateStyles({ '--img-zoom': this._zoom });
 		}
 
@@ -250,7 +252,7 @@
 	<div id="controlsContainer">
 		<label>
 			<h3>Revision Opacity</h3>
-			<input id="opacitySlider" max="1.0" min="0.0" on-input="handleOpacityChange" step=".01" type="range" value="0.5"/>
+			<input id="opacitySlider" max="1.0" min="0.01" on-input="handleOpacityChange" step=".01" type="range" value="0.5"/>
 		</label>
 	</div>
 </div>
